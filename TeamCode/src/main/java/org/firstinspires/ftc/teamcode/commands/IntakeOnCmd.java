@@ -8,8 +8,9 @@ public class IntakeOnCmd extends Command{
 
     @Override
     public void runCmd() {
-        if(Robot.cuva.cuvaState != Cuva.CuvaState.INTAKE &&
-        Robot.glisiere.isAtIntake()) {
+        if(Robot.glisiere.isAtIntake()) {
+            Robot.intake.intakeDown();
+            Robot.cuva.setCuvaIntake();
             Robot.cuva.setImpinsIn();
             Robot.intake.intakeOn();
         }

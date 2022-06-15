@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleOps;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commands.IntakeOffCmd;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Cuva;
 import org.firstinspires.ftc.teamcode.subsystems.Glisiere;
@@ -11,9 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Rate;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.util.GamepadEx;
 
-@TeleOp
-public class TestOp extends OpMode {
-
+public class CmdOp extends OpMode {
     GamepadEx g1;
     GamepadEx g2;
 
@@ -23,10 +21,6 @@ public class TestOp extends OpMode {
     Cuva cuva;
     Glisiere glisiere;
     Rate rate;
-
-    boolean intakeOn = false;
-    int cuvaIntake = 0;
-    boolean impinsBlock = true;
 
     @Override
     public void init() {
@@ -59,59 +53,43 @@ public class TestOp extends OpMode {
 
         drive.powerFromAxis(d, s, r);
 
-        //region Intake
-        if(g2.y_once) intakeOn = !intakeOn;
-        if(intakeOn) Robot.intakeOnCmd.runCmd();
-        else Robot.intakeOffCmd.runCmd();
-
-        if(g2.right_trigger > 0.2) {
-            intakeOn = false;
+        if(g2.y_once) {
+            switch (intake.intakeState) {
+                case ON: Robot.intakeOffCmd.runCmd(); break;
+                case OFF: Robot.intakeOnCmd.runCmd(); break;
+            }
+        } else if(g2.right_trigger > 0.2)
             Robot.intakeReverseCmd.runCmd();
-        }
-        //endregion
+        else if(intake.intakeState == Intake.IntakeState.REVERSE)
+            Robot.intakeOffCmd.runCmd();
 
-        //region Cuva
+        if(g2.x_once)
+            switch (cuva.cuvaState) {
+                case INTAKE: Robot.elementInsideCmd.runCmd(); break;
+                case MID: Robot.scoreElementCmd.runCmd(); break;
+                case OUT: Robot.elementInsideCmd.runCmd(); break;
+            }
 
-        //endregion
-
-        //region Glisiere
         switch (glisiere.glisiereState) {
             case AUTO:
-                if(g2.left_stick_button_once) {
+                if(g2.left_stick_button_once)
                     glisiere.glisiereStop();
-                } else {
-                    if(g2.dpad_up_once)
-                        glisiere.glisierePositions = glisiere.glisierePositions.next();
-                    else if(g2.dpad_down_once)
-                        glisiere.glisierePositions = glisiere.glisierePositions.prev();
+                else if(g2.dpad_up_once) {
+                    Robot.glisiereAutoUpCmd.runCmd();
+                } else if(g2.dpad_down_once) {
+                    Robot.glisiereAutoDownCmd.runCmd();
                 }
                 break;
             default:
                 if(g2.right_stick_button_once) {
-                    glisiere.glisiereState = Glisiere.GlisiereState.AUTO;
-                    cuvaIntake = 1;
+                    Robot.glisiereToAutoCmd.runCmd();
+                } else if(g2.dpad_up) {
+                    Robot.glisiereUpCmd.runCmd();
+                } else if(g2.dpad_down) {
+                    Robot.glisiereDownCmd.runCmd();
+                } else {
+                    glisiere.glisiereStop();
                 }
-                else if(g2.dpad_up)
-                    glisiere.glisiereUp();
-                else if(g2.dpad_down)
-                    glisiere.glisiereDown();
-                else glisiere.glisiereStop();
-        }
-        //endregion
-
-        //region Rate
-        if(g1.left_trigger > 0.2)
-            rate.rateRed();
-        else rate.rateStop();
-        //endregion
-
-        if(glisiere.glisiereState == Glisiere.GlisiereState.MOVING)
-            cuvaIntake = 1;
-
-        switch (cuvaIntake) {
-            case 0: cuva.setCuvaIntake(); break;
-            case 1: cuva.setCuvaMid(); break;
-            case 2: cuva.setCuvaOut(); break;
         }
 
         glisiere.update();
@@ -119,5 +97,6 @@ public class TestOp extends OpMode {
         telemetry.addLine("Glisiere\n")
                 .addData("state", glisiere.glisiereState)
                 .addData("pos", glisiere.getCurrentPosition());
+
     }
 }
