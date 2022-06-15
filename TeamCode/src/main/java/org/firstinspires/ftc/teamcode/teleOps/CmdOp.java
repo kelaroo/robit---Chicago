@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleOps;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.IntakeOffCmd;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Rate;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.util.GamepadEx;
 
+@TeleOp
 public class CmdOp extends OpMode {
     GamepadEx g1;
     GamepadEx g2;
