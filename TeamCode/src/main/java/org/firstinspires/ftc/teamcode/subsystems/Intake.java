@@ -10,8 +10,8 @@ public class Intake {
 
     // Constants
     public static double INTAKE_ON = 1.0;
-    public static double SERVO_UP = 0.5;
-    public static double SERVO_DOWN = 0.5;
+    public static double SERVO_UP = 0.17;
+    public static double SERVO_DOWN = 0.9;
 
     // Hardware
     DcMotorEx intake;
@@ -21,6 +21,11 @@ public class Intake {
         ON, OFF, REVERSE
     }
     public IntakeState intakeState = IntakeState.OFF;
+
+    public enum ServoState {
+        UP, DOWN
+    }
+    public ServoState servoState = ServoState.UP;
 
     public Intake(HardwareMap hw) {
         intake = hw.get(DcMotorEx.class, "intake");
@@ -45,6 +50,25 @@ public class Intake {
         intakeState = IntakeState.REVERSE;
     }
 
-    public void intakeDown() { servoIntake.setPosition(SERVO_DOWN); }
-    public void intakeUp() { servoIntake.setPosition(SERVO_UP); }
+    public void intakeDown() {
+        servoIntake.setPosition(SERVO_DOWN);
+        servoState = ServoState.DOWN;
+    }
+    public void intakeUp() {
+        servoIntake.setPosition(SERVO_UP);
+        servoState = ServoState.UP;
+    }
+
+    public void update() {
+        switch (intakeState) {
+            case OFF: intakeOff(); break;
+            case ON: intakeOn(); break;
+            case REVERSE: intakeReverse(); break;
+        }
+
+        switch (servoState) {
+            case UP: intakeUp(); break;
+            case DOWN: intakeDown(); break;
+        }
+    }
 }

@@ -11,6 +11,7 @@ public class Glisiere {
 
     // Constants
     public static double POWER = 1;
+    public static double MANUAL_POWER = 1;
     public static double IDLE_POWER = 0.0;
     public static double DOWN_POWER = -0.7;
 
@@ -94,9 +95,30 @@ public class Glisiere {
         glisiereState = GlisiereState.MOVING;
     }
 
+    public void glisiereManualPower(double axis) {
+        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        if(axis != 0) {
+            leftMotor.setPower(axis * MANUAL_POWER);
+            rightMotor.setPower(axis * MANUAL_POWER);
+        } else {
+            leftMotor.setPower(IDLE_POWER);
+            rightMotor.setPower(IDLE_POWER);
+        }
+
+
+        glisiereState = GlisiereState.MOVING;
+    }
+
     public int getCurrentPosition() { return leftMotor.getCurrentPosition(); }
 
     public boolean isAtIntake() { return Math.abs(getCurrentPosition()) < 50; }
+
+    public boolean autoIsAtTarget() {
+        return glisiereState == GlisiereState.AUTO
+                && !leftMotor.isBusy();
+    }
 
     public void update() {
         GlisierePositions.INTAKE.setTicks(INTAKE_POS);
@@ -113,6 +135,10 @@ public class Glisiere {
 
                 leftMotor.setPower(POWER);
                 rightMotor.setPower(POWER);
+
+                if(autoIsAtTarget()) {
+                    glisiereStop();
+                }
                 break;
         }
     }

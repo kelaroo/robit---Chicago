@@ -67,9 +67,10 @@ public class CmdOp extends OpMode {
 
         if(g2.x_once)
             switch (cuva.cuvaState) {
-                case INTAKE: Robot.elementInsideCmd.runCmd(); break;
+                case INTAKE:
+                case OUT:
+                    Robot.elementInsideCmd.runCmd(); break;
                 case MID: Robot.scoreElementCmd.runCmd(); break;
-                case OUT: Robot.elementInsideCmd.runCmd(); break;
             }
 
         switch (glisiere.glisiereState) {
