@@ -50,7 +50,7 @@ public class RobitOp extends OpMode {
 
         if(elementInLastLoop == false
         && robit.cuva.isElementIn()) {
-            //robit.autoElementIn();
+            robit.autoElementIn();
         }
         elementInLastLoop = robit.cuva.isElementIn();
 

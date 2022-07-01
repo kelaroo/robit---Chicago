@@ -16,9 +16,9 @@ public class GamepadEx {
     public boolean left_stick_button, right_stick_button;
     public boolean left_stick_button_once, right_stick_button_once;
 
-    public double left_trigger, right_trigger;
-    @Deprecated
-    public boolean left_trigger_once, right_trigger_once;
+    public double left_trigger = 0, right_trigger = 0;
+    public boolean left_trigger_once = false, right_trigger_once = false;
+    public boolean left_trigger_release = false, right_trigger_release = false;
 
     public double left_stick_x, left_stick_y, right_stick_x, right_stick_y;
 
@@ -29,9 +29,28 @@ public class GamepadEx {
     }
 
     public void update() {
-        // Triggers
+        //region Triggers
+        if(left_trigger == 0 && gamepad.left_trigger > 0)
+            left_trigger_once = true;
+        else if(left_trigger != 0 && gamepad.left_trigger == 0)
+            left_trigger_release = true;
+        else {
+            left_trigger_once = false;
+            left_trigger_release = false;
+        }
+        if(right_trigger == 0 && gamepad.right_trigger > 0)
+            right_trigger_once = true;
+        else if(right_trigger != 0 && gamepad.right_trigger == 0)
+            right_trigger_release = true;
+        else {
+            right_trigger_once = false;
+            right_trigger_release = false;
+        }
+
         left_trigger = gamepad.left_trigger;
         right_trigger = gamepad.right_trigger;
+        //endregion
+
 
         // Joysticks
         left_stick_x = gamepad.left_stick_x;
