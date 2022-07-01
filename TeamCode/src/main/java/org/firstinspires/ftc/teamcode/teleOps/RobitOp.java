@@ -50,7 +50,7 @@ public class RobitOp extends OpMode {
 
         if(elementInLastLoop == false
         && robit.cuva.isElementIn()) {
-            robit.autoElementIn();
+            //robit.autoElementIn();
         }
         elementInLastLoop = robit.cuva.isElementIn();
 
@@ -121,14 +121,15 @@ public class RobitOp extends OpMode {
         else if(g1.dpad_down)
             robit.capper.bratDown();
         else if(g1.dpad_right_once)
-            robit.capper.clawGrab();
-        else if(g1.dpad_left_once)
             robit.capper.clawDrop();
+        else if(g1.dpad_left_once)
+            robit.capper.clawGrab();
 
         telemetry.setItemSeparator("\n\t");
         telemetry.addLine("SensorCuva\n")
                 .addData("isElementIn", robit.cuva.isElementIn())
                 .addData("rawLight", robit.cuva.sensorCuva.getRawLightDetected())
+                .addData("distance", robit.cuva.sensorCuva.getDistance(DistanceUnit.MM))
                 .addData("type", robit.cuva.isSphereOrCube());
         telemetry.addLine("Glisiere\n")
                 .addData("position", robit.glisiere.getCurrentPosition());
