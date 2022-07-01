@@ -17,7 +17,7 @@ public class Glisiere {
 
     public static int INTAKE_POS = 0;
     public static int LEVEL1_POS = 600;
-    public static int LEVEL2_POS = 1300;
+    public static int LEVEL2_POS = 1520;
 
     // Hardware
     DcMotorEx rightMotor;

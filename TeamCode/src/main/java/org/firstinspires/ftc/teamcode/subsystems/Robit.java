@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+@Config
 public class Robit {
 
     public SampleMecanumDrive drive;
@@ -13,6 +15,7 @@ public class Robit {
     public Cuva cuva;
     public Glisiere glisiere;
     public Rate rate;
+    public Capper capper;
 
     private boolean isRedAlliance;
 
@@ -23,6 +26,7 @@ public class Robit {
         cuva = new Cuva(hw);
         glisiere = new Glisiere(hw);
         rate = new Rate(hw);
+        capper = new Capper(hw);
 
         isRedAlliance = isRed;
     }
@@ -50,6 +54,7 @@ public class Robit {
     }
 
     public void intakeOut() {
+        cuva.setImpinsIn();
         intake.intakeReverse();
     }
 
@@ -108,6 +113,32 @@ public class Robit {
             });
             elementOutThread.start();
         }
+    }
+
+    public static int ELEMENT_IN_WAIT = 50;
+    public Thread elementInThread;
+    public void autoElementIn() {
+        if(elementInThread != null && elementInThread.isAlive())
+            return;
+
+        elementInThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cuva.setImpinsBlock();
+
+                ElapsedTime timer = new ElapsedTime();
+                while(timer.milliseconds() < ELEMENT_IN_WAIT);
+
+                intake.intakeOff();
+                cuva.setCuvaMid();
+
+                intake.intakeReverse();
+                timer = new ElapsedTime();
+                while(timer.milliseconds() < 500);
+                intake.intakeOff();
+            }
+        });
+        elementInThread.start();
     }
 
 }

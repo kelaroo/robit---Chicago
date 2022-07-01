@@ -12,15 +12,15 @@ public class Cuva {
     // Constants
     public static double CUVA_INTAKE = 0.868;
     public static double CUVA_MID = 0.47;
-    public static double CUVA_SHIPPING = 0.65;
-    public static double CUVA_SFERA = 0.7;
+    public static double CUVA_SHIPPING = 0.28;
+    public static double CUVA_SFERA = 0.35;
     public static double CUVA_OUT = 0.2 ;
 
     public static double IMPINS_IN = 0.55;
-    public static double IMPINS_BLOCK = 0.45;
+    public static double IMPINS_BLOCK = 0.42;
     public static double IMPINS_OUT = 0.2;
 
-    public static int RAW_THRESH = 1023;
+    public static int RAW_THRESH = 400;
 
     // Hardware
     Servo impins;
