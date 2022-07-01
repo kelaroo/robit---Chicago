@@ -54,7 +54,7 @@ public class Robit {
     }
 
     public void intakeOut() {
-        cuva.setImpinsIn();
+        //cuva.setImpinsIn();
         intake.intakeReverse();
     }
 

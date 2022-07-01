@@ -49,18 +49,20 @@ public class RobitOp extends OpMode {
             }
 
         if(elementInLastLoop == false
-        && robit.cuva.isElementIn()) {
+        && robit.cuva.isElementIn()
+        && robit.cuva.cuvaState == Cuva.CuvaState.INTAKE) {
             robit.autoElementIn();
         }
         elementInLastLoop = robit.cuva.isElementIn();
 
-        if(robit.elementInThread == null || !robit.elementInThread.isAlive())
-            if(g2.left_trigger > 0.1 && !elementInLastLoop)
+        if(robit.elementInThread == null || !robit.elementInThread.isAlive()) {
+            if(g2.left_trigger_once && !elementInLastLoop)
                 robit.intakeOn();
-            else if(g2.right_trigger > 0.1)
+            else if(g2.right_trigger_once)
                 robit.intakeOut();
-            else robit.intakeOff();
-
+            else if(g2.right_trigger_release || g2.left_trigger_release)
+                robit.intakeOff();
+        }
 
         /*if(robit.cuva.isElementIn() && robit.glisiere.isAtIntake()) {
             if(g2.right_trigger > 0.1) {
@@ -98,7 +100,9 @@ public class RobitOp extends OpMode {
         else if(g2.dpad_up_once)
             switch (robit.cuva.cuvaState) {
                 case SHIPPING: robit.setCuva(Cuva.CuvaState.SFERA); break;
-                case SFERA: robit.setCuva(Cuva.CuvaState.SHIPPING); break;
+                case SFERA:
+                default:
+                    robit.setCuva(Cuva.CuvaState.SHIPPING); break;
             }
         else if(g2.dpad_right_once)
             robit.setCuva(Cuva.CuvaState.SFERA);
