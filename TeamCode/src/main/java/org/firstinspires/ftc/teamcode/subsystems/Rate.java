@@ -13,7 +13,7 @@ public class Rate {
     public static double POWER = 0.25;
 
     // Hardware
-    DcMotorEx rate;
+    public DcMotorEx rate;
 
     public Rate(HardwareMap hw) {
         rate = hw.get(DcMotorEx.class, "carousel");

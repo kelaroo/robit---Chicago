@@ -48,12 +48,15 @@ public class RobitOp extends OpMode {
                 case DOWN: robit.intakeUp(); break;
             }
 
-        if(elementInLastLoop == false
-        && robit.cuva.isElementIn()
+        if(robit.cuva.isElementIn()
         && robit.cuva.cuvaState == Cuva.CuvaState.INTAKE) {
             robit.autoElementIn();
         }
         elementInLastLoop = robit.cuva.isElementIn();
+
+        telemetry.addLine("DEBUG\n")
+                .addData("g2.lefttriggeronce", g2.left_trigger_once)
+                .addData("!elementInLastLoop", !elementInLastLoop);
 
         if(robit.elementInThread == null || !robit.elementInThread.isAlive()) {
             if(g2.left_trigger_once && !elementInLastLoop)

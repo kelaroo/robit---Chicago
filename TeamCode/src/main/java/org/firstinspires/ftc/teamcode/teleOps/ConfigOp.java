@@ -104,5 +104,9 @@ public class ConfigOp extends OpMode {
         telemetry.addLine("Glisiere\n")
                 .addData("glisiereState", glisiere.glisiereState)
                 .addData("glisierePositions", glisiere.glisierePositions);
+
+        telemetry.addLine("Odometry\n")
+                .addData("parallel", intake.intake.getCurrentPosition())
+                .addData("perp", rate.rate.getCurrentPosition());
     }
 }

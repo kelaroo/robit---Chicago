@@ -14,7 +14,7 @@ public class Intake {
     public static double SERVO_DOWN = 0.9;
 
     // Hardware
-    DcMotorEx intake;
+    public DcMotorEx intake;
     Servo servoIntake;
 
     public enum IntakeState {
