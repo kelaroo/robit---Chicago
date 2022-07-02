@@ -31,6 +31,14 @@ public class Robit {
         isRedAlliance = isRed;
     }
 
+    public void initAuto() {
+        capper.setBratPosition(Capper.BRAT_MIN);
+        cuva.setImpinsBlock();
+        cuva.setCuvaIntake();
+        glisiere.resetEncoders();
+        intake.intakeUp();
+    }
+
     public void update() {
         drive.update();
         intake.update();

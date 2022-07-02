@@ -53,9 +53,6 @@ public class Glisiere {
         rightMotor = hw.get(DcMotorEx.class, "outtake_right");
         leftMotor = hw.get(DcMotorEx.class, "outtake_left");
 
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -63,6 +60,13 @@ public class Glisiere {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public void resetEncoders() {
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void glisiereUp() {

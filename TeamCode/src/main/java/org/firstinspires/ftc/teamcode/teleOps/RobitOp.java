@@ -28,6 +28,8 @@ public class RobitOp extends OpMode {
         robit.intakeDown();
         robit.update();
 
+        robit.glisiere.resetEncoders();
+
         g1 = new GamepadEx(gamepad1);
         g2 = new GamepadEx(gamepad2);
     }
