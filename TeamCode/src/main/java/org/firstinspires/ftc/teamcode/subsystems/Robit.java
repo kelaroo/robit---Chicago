@@ -117,6 +117,7 @@ public class Robit {
 
     public static int ELEMENT_IN_WAIT = 50;
     public static int ELEMENT_IN_RAISE = 100;
+    public static int ELEMENT_IN_REVERSE = 50;
     public Thread elementInThread;
     public void autoElementIn() {
         if(elementInThread != null && elementInThread.isAlive())
@@ -129,7 +130,6 @@ public class Robit {
                 ElapsedTime timer = new ElapsedTime();
                 while(timer.milliseconds() < ELEMENT_IN_WAIT);
 
-                if(!cuva.isElementIn()) return;
                 cuva.setImpinsBlock();
 
                 intake.intakeOff();
@@ -138,6 +138,8 @@ public class Robit {
                 while(timer.milliseconds() < ELEMENT_IN_RAISE);
 
                 cuva.setCuvaMid();
+                timer = new ElapsedTime();
+                while(timer.milliseconds() < ELEMENT_IN_REVERSE);
 
                 intake.intakeReverse();
                 timer = new ElapsedTime();

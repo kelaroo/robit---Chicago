@@ -130,7 +130,7 @@ public class RobitOp extends OpMode {
 
         if(gamepad1.back)
             robit.failSafe();
-        if(robit.glisiere.isDescending())
+        if(robit.glisiere.isDescending() && robit.glisiere.glisierePositions == Glisiere.GlisierePositions.INTAKE)
             robit.cuva.setImpinsIn();
 
         telemetry.setItemSeparator("\n\t");
