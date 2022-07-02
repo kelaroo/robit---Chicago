@@ -108,7 +108,7 @@ public class Robit {
                     cuva.setImpinsOut();
                     ElapsedTime timer = new ElapsedTime();
                     while(timer.milliseconds() < 1000);
-                    cuva.setImpinsBlock();
+                    cuva.setImpinsIn();
                 }
             });
             elementOutThread.start();
@@ -148,4 +148,7 @@ public class Robit {
         elementInThread.start();
     }
 
+    public void failSafe() {
+        cuva.setImpinsIn();
+    }
 }

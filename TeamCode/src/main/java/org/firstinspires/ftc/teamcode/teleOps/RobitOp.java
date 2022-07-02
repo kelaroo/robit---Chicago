@@ -54,10 +54,6 @@ public class RobitOp extends OpMode {
         }
         elementInLastLoop = robit.cuva.isElementIn();
 
-        telemetry.addLine("DEBUG\n")
-                .addData("g2.lefttriggeronce", g2.left_trigger_once)
-                .addData("!elementInLastLoop", !elementInLastLoop);
-
         if(robit.elementInThread == null || !robit.elementInThread.isAlive()) {
             if(g2.left_trigger_once && !elementInLastLoop)
                 robit.intakeOn();
@@ -131,6 +127,11 @@ public class RobitOp extends OpMode {
             robit.capper.clawDrop();
         else if(g1.dpad_left_once)
             robit.capper.clawGrab();
+
+        if(gamepad1.back)
+            robit.failSafe();
+        if(robit.glisiere.isDescending())
+            robit.cuva.setImpinsIn();
 
         telemetry.setItemSeparator("\n\t");
         telemetry.addLine("SensorCuva\n")

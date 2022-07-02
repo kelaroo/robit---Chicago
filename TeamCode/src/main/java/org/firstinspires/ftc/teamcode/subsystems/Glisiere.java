@@ -115,6 +115,11 @@ public class Glisiere {
 
     public boolean isAtIntake() { return Math.abs(getCurrentPosition()) < 50; }
 
+    public boolean isDescending() {
+        return glisiereState == GlisiereState.AUTO
+                && getCurrentPosition() > glisierePositions.getTicks();
+    }
+
     public boolean autoIsAtTarget() {
         return glisiereState == GlisiereState.AUTO
                 && !leftMotor.isBusy();

@@ -9,11 +9,20 @@ import org.opencv.imgproc.Imgproc;
 
 public class RosuCiclatPipieline extends DetectionPipeline{
 
-    Scalar hsvMin = new Scalar(85, 50, 75);
-    Scalar hsvMax = new Scalar(105, 255, 255);
+    public static int H_MIN = 0;
+    public static int S_MIN = 0;
+    public static int V_MIN = 0;
+    public static int H_MAX = 255;
+    public static int S_MAX = 255;
+    public static int V_MAX = 255;
 
-    Rect leftScreenRect = new Rect(new Point(0, 0), new Point(182, 240));
-    Rect rightScreenRect = new Rect(new Point(183, 0), new Point(320, 240));
+    public static int SEPARATION_LINE = 180;
+
+    Scalar hsvMin = new Scalar(H_MIN, S_MIN, V_MIN);
+    Scalar hsvMax = new Scalar(H_MAX, S_MAX, V_MAX);
+
+    Rect leftScreenRect = new Rect(new Point(0, 0), new Point(SEPARATION_LINE, 240));
+    Rect rightScreenRect = new Rect(new Point(SEPARATION_LINE, 0), new Point(320, 240));
 
     Mat hsvMat = new Mat();
     Mat filteredMat = new Mat();
@@ -23,6 +32,12 @@ public class RosuCiclatPipieline extends DetectionPipeline{
 
     @Override
     public Mat processFrame(Mat input) {
+
+        hsvMin = new Scalar(H_MIN, S_MIN, V_MIN);
+        hsvMax = new Scalar(H_MAX, S_MAX, V_MAX);
+        leftScreenRect = new Rect(new Point(0, 0), new Point(SEPARATION_LINE, 240));
+        rightScreenRect = new Rect(new Point(SEPARATION_LINE, 0), new Point(320, 240));
+
         Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
         Core.inRange(hsvMat, hsvMin, hsvMax, filteredMat);
 
@@ -39,7 +54,7 @@ public class RosuCiclatPipieline extends DetectionPipeline{
         else
             tsePosition = TsePosition.MID;
 
-        Imgproc.line(input, new Point(183, 0), new Point(183, 240), new Scalar(0, 255, 0));
+        Imgproc.line(input, new Point(SEPARATION_LINE, 0), new Point(SEPARATION_LINE, 240), new Scalar(0, 255, 0));
         return input;
     }
 }
