@@ -55,6 +55,6 @@ public class RosuCiclatPipieline extends DetectionPipeline{
             tsePosition = TsePosition.MID;
 
         Imgproc.line(input, new Point(SEPARATION_LINE, 0), new Point(SEPARATION_LINE, 240), new Scalar(0, 255, 0));
-        return input;
+        return filteredMat;
     }
 }

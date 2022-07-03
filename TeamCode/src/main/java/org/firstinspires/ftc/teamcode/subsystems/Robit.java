@@ -33,14 +33,14 @@ public class Robit {
 
     public void initAuto() {
         capper.setBratPosition(Capper.BRAT_MIN);
-        //cuva.setImpinsBlock();
+        cuva.setImpinsBlock();
         cuva.setCuvaIntake();
         glisiere.resetEncoders();
         intake.intakeUp();
     }
 
     public void update() {
-        drive.update();
+        //drive.update();
         intake.update();
         cuva.update();
         glisiere.update();
