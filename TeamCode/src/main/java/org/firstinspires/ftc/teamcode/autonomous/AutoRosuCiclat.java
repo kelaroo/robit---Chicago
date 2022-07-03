@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,21 +23,15 @@ public class AutoRosuCiclat extends LinearOpMode {
 
     Pose2d startPose = new Pose2d(7.0, -65.0, rad(-90.0));
 
-    public static double T1_X = 7;
-    public static double T1_Y = -54.0;
-    public static double T1_ANGLE = -12.0;
+    public static double SPEED = 40.0;
 
-    public static double T2_X = 7.0;
-    public static double T2_Y = -63.3;
-    public static double T2_TANGENT = 0.0;
-    public static double T2_1_FWD = 40.0;
+    public static double T1_X = -10.0;
+    public static double T1_Y = -55;
 
-    public static double T3_BWD = 50.0;
+    public static double T2_X = 15.0;
+    public static double T2_Y = -64.0;
 
-    public static double T4_X = -4.0;
-    public static double T4_Y = -50.0;
-    public static double T4_ANGLE = -20.0;
-    public static double T4_TANGENT = 90.0;
+    public static double T3_FWD = 27.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -61,37 +56,28 @@ public class AutoRosuCiclat extends LinearOpMode {
             telemetry.addData("tsePosition", tsePosition);
             telemetry.update();
         }
+        if(isStopRequested()) return;
 
-        Trajectory t1 = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(T1_X, T1_Y, rad(T1_ANGLE)))
+
+        Trajectory t1 = drive.myTrajectoryBuilder(startPose, SPEED, SPEED)
+                .lineToConstantHeading(new Vector2d(T1_X, T1_Y))
                 .build();
-        Trajectory t2 = drive.trajectoryBuilder(t1.end())
-                .lineToLinearHeading(new Pose2d(T2_X, T2_Y, 0.0))
+        Trajectory t2 = drive.myTrajectoryBuilder(t1.end(), SPEED, SPEED)
+                .splineToLinearHeading(new Pose2d(T2_X, T2_Y, 0.0), rad(0.0))
                 .build();
-        Trajectory t2_1 = drive.trajectoryBuilder(t2.end())
-                .forward(T2_1_FWD)
-                .build();
-        Trajectory t3 = drive.myTrajectoryBuilder(t2_1.end(), 20.0, 20.0)
-                .back(T3_BWD)
-                .build();
-        Trajectory t4 = drive.myTrajectoryBuilder(t3.end(), 180.0, 20, 20)
-                .splineToLinearHeading(new Pose2d(T4_X, T4_Y, rad(T4_ANGLE)), rad(90.0))
+        Trajectory t3 = drive.myTrajectoryBuilder(t2.end(), SPEED, SPEED)
+                .forward(T3_FWD)
                 .build();
 
         robit.capper.setBratPosition(0.4);
         drive.setPoseEstimate(startPose);
 
         drive.followTrajectory(t1); sleep(2000);
-        //lasa primul element
-
         drive.followTrajectory(t2); sleep(2000);
-        drive.followTrajectory(t2_1);
-        //merge in warehouse
-        //ia un element
-
         drive.followTrajectory(t3); sleep(2000);
-        drive.followTrajectory(t4); sleep(2000);
-        //lasa element
+
+        while(!isStopRequested())
+            ;
 
     }
 
