@@ -57,8 +57,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static double HIGH_SPEED_COEFF = 0.7;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -333,4 +333,23 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         setMotorPowers(LF, LB, RB, RF);
     }
+
+    public TrajectoryBuilder myTrajectoryBuilder(Pose2d startPose, double maxVelo, double maxAccel){
+        MinVelocityConstraint myVelConstraint = new MinVelocityConstraint(Arrays.asList(new AngularVelocityConstraint(maxAccel), new MecanumVelocityConstraint(maxVelo, DriveConstants.TRACK_WIDTH)));
+        ProfileAccelerationConstraint myAccelConstraint = new ProfileAccelerationConstraint(maxAccel);
+        return new TrajectoryBuilder(startPose, myVelConstraint, myAccelConstraint);
+    }
+
+    public TrajectoryBuilder myTrajectoryBuilder(Pose2d startPose, boolean reversed, double maxVelo, double maxAccel){
+        MinVelocityConstraint myVelConstraint = new MinVelocityConstraint(Arrays.asList(new AngularVelocityConstraint(maxAccel), new MecanumVelocityConstraint(maxVelo, DriveConstants.TRACK_WIDTH)));
+        ProfileAccelerationConstraint myAccelConstraint = new ProfileAccelerationConstraint(maxAccel);
+        return new TrajectoryBuilder(startPose, reversed, myVelConstraint, myAccelConstraint);
+    }
+
+    public TrajectoryBuilder myTrajectoryBuilder(Pose2d startPose, double startHeading, double maxVelo, double maxAccel){
+        MinVelocityConstraint myVelConstraint = new MinVelocityConstraint(Arrays.asList(new AngularVelocityConstraint(maxAccel), new MecanumVelocityConstraint(maxVelo, DriveConstants.TRACK_WIDTH)));
+        ProfileAccelerationConstraint myAccelConstraint = new ProfileAccelerationConstraint(maxAccel);
+        return new TrajectoryBuilder(startPose, startHeading, myVelConstraint, myAccelConstraint);
+    }
+
 }

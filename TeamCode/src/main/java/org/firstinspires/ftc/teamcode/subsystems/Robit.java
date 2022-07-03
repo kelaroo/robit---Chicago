@@ -33,7 +33,7 @@ public class Robit {
 
     public void initAuto() {
         capper.setBratPosition(Capper.BRAT_MIN);
-        cuva.setImpinsBlock();
+        //cuva.setImpinsBlock();
         cuva.setCuvaIntake();
         glisiere.resetEncoders();
         intake.intakeUp();
