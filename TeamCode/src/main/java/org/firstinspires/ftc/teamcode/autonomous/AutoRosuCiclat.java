@@ -74,6 +74,8 @@ public class AutoRosuCiclat extends LinearOpMode {
 
         drive.followTrajectory(t1); sleep(2000);
         drive.followTrajectory(t2); sleep(2000);
+        Pose2d pos = drive.getPoseEstimate();
+        drive.setPoseEstimate(t2.end());
         drive.followTrajectory(t3); sleep(2000);
 
         while(!isStopRequested())
