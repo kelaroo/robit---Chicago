@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
 
     // Constants
-    public static double INTAKE_ON = 1.0;
+    public static double INTAKE_ON = 0.75;
     public static double SERVO_UP = 0.17;
     public static double SERVO_DOWN = 0.9;
 

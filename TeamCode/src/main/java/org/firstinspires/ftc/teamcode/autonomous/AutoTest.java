@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Glisiere;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Robit;
+import org.firstinspires.ftc.teamcode.subsystems.cameras.CameraRed;
+import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.DetectionPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.RosuCiclatPipieline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
@@ -20,12 +23,13 @@ public class AutoTest extends LinearOpMode {
 
     Robit robit;
     SampleMecanumDrive drive;
+    CameraRed camera;
 
     Pose2d startPose = new Pose2d(7.0, -65.0, rad(-90.0));
 
     public static int TIMEOUT = 1000;
-    public static int SWITCH_TIME = 150;
-    public static double DRIVE = 0.3, STRAFE = 0, ROTATE = 0.3;
+    public static int SWITCH_TIME = 250;
+    public static double DRIVE = 0.23, STRAFE = 0, ROTATE = 0.17;
 
     public static double T1_X = -15;
     public static double T1_Y = -48;
@@ -33,12 +37,16 @@ public class AutoTest extends LinearOpMode {
     public static double T2_Y = -65;
     public static double T2_FWD = 10;
     public static double T2_STRAFE = -4;
-    public static double T3_FWD = 10;
+    public static double T3_FWD = 13.5;
 
     public static double T4_X = 15;
-    public static double T5_X = 5.5;
-    public static double T5_Y = -54;
-    public static double T5_ANGLE = -58;
+    public static double T5_X = 4.7;
+    public static double T5_Y = -48;
+    public static double T5_ANGLE = -60;
+
+    public static double T6_X = 17;
+    public static double T6_Y = -66;
+    public static double T7_FWD = 22;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,7 +54,14 @@ public class AutoTest extends LinearOpMode {
         drive = robit.drive;
         robit.initAuto();
 
-        while(!isStarted());
+        camera = new CameraRed(hardwareMap, new RosuCiclatPipieline());
+
+        DetectionPipeline.TsePosition tsePosition = DetectionPipeline.TsePosition.RIGHT;
+        while(!isStarted()) {
+            tsePosition = camera.getDetection();
+            telemetry.addData("detection", tsePosition);
+            telemetry.update();
+        }
         if(isStopRequested()) return;
 
         Thread updateThread = new Thread(new Runnable() {
@@ -97,7 +112,7 @@ public class AutoTest extends LinearOpMode {
 
 
         //nebuneala
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 3 && opModeIsActive() && !isStopRequested(); i++) {
 
             ElapsedTime timer = new ElapsedTime();
             while(!robit.cuva.isElementIn()) {
@@ -111,6 +126,7 @@ public class AutoTest extends LinearOpMode {
             drive.setMotorPowers(0, 0, 0, 0);
             if(robit.cuva.isElementIn())
                 robit.autoElementIn();
+            robit.intakeOut();
 
             pose = drive.getPoseEstimate();
             Trajectory t4 = drive.trajectoryBuilder(pose)
@@ -125,6 +141,7 @@ public class AutoTest extends LinearOpMode {
             robit.glisiereAuto(Glisiere.GlisierePositions.LEVEL2);
             robit.cuva.setCuvaSfera();
 
+
             drive.followTrajectory(t5);
 
             robit.cuva.setImpinsOut();
@@ -133,14 +150,14 @@ public class AutoTest extends LinearOpMode {
 
             pose = drive.getPoseEstimate();
             TrajectorySequence t6 = drive.trajectorySequenceBuilder(pose)
-                    .splineToLinearHeading(new Pose2d(T2_X, T2_Y, 0.0), 0.0)
+                    .splineToLinearHeading(new Pose2d(T6_X, T6_Y, 0.0), 0.0)
                     .addDisplacementMarker(()->{
                         robit.cuva.setCuvaIntake();
                         robit.intakeOn();
                         robit.intakeDown();
                         robit.cuva.setImpinsIn();
                     })
-                    .lineToConstantHeading(new Vector2d(T2_X+T2_FWD, T2_Y+T2_STRAFE))
+                    .lineToConstantHeading(new Vector2d(T6_X+T2_FWD, T6_Y+T2_STRAFE))
                     .build();
 
             drive.followTrajectorySequence(t6);
@@ -148,10 +165,13 @@ public class AutoTest extends LinearOpMode {
             pose = drive.getPoseEstimate();
             drive.setPoseEstimate(new Pose2d(pose.getX(), -65, pose.getHeading()));
             Trajectory t7 = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .forward(T3_FWD)
+                    .forward(T7_FWD)
                     .build();
             drive.followTrajectory(t7);
         }
+
+        robit.intakeOff();
+        
 
         while(!isStopRequested());
     }
