@@ -16,7 +16,7 @@ public class Cuva {
     public static double CUVA_SFERA = 0.35;
     public static double CUVA_OUT = 0.2 ;
 
-    public static double IMPINS_IN = 0.42;
+    public static double IMPINS_IN = 0.45;
     public static double IMPINS_BLOCK = 0.375;
     public static double IMPINS_OUT = 0.17;
 

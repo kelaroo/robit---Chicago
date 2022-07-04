@@ -47,7 +47,7 @@ public class RosuCiclatPipieline extends DetectionPipeline{
         nrPixelsLeft = Core.countNonZero(leftScreen);
         nrPixelsRight = Core.countNonZero(rightScreen);
 
-        if(nrPixelsLeft < 450 && nrPixelsRight < 450)
+        if(nrPixelsLeft < 1000 && nrPixelsRight < 1000 )
             tsePosition = TsePosition.RIGHT;
         else if(nrPixelsLeft > nrPixelsRight)
             tsePosition = TsePosition.LEFT;

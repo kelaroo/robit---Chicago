@@ -11,18 +11,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Capper;
 import org.firstinspires.ftc.teamcode.subsystems.Glisiere;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Robit;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.CameraRed;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.DetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.RosuCiclatPipieline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-import java.sql.Time;
-
 @Config
 @Autonomous
-public class AutoTest extends LinearOpMode {
+public class AutoAlbastru extends LinearOpMode {
 
     Robit robit;
     SampleMecanumDrive drive;
