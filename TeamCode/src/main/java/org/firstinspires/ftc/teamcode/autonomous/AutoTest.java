@@ -41,6 +41,12 @@ public class AutoTest extends LinearOpMode {
     public static double T5_Y = -54;
     public static double T5_ANGLE = -55;
 
+    public static double T6_X = 15;
+    public static double T6_Y = -65;
+    public static double T6_FWD = 10;
+    public static double T6_STRAFE = -4;
+    public static double T6_FWD_2 = 10;
+
     @Override
     public void runOpMode() throws InterruptedException {
         robit = new Robit(hardwareMap, true);
@@ -123,6 +129,21 @@ public class AutoTest extends LinearOpMode {
         robit.cuva.setImpinsOut();
         sleep(300);
         robit.glisiereAuto(Glisiere.GlisierePositions.INTAKE);
+
+        TrajectorySequence t6 = drive.trajectorySequenceBuilder(t5.end())
+                .setTangent(rad(-90.0))
+                .splineToLinearHeading(new Pose2d(T6_X, T6_Y, 0.0), 0.0)
+                .addDisplacementMarker(()->{
+                    robit.cuva.setCuvaIntake();
+                    robit.intakeOn();
+                    robit.intakeDown();
+                    robit.cuva.setImpinsIn();
+                })
+                .lineToConstantHeading(new Vector2d(T6_X+T6_FWD, T6_Y+T6_STRAFE))
+                .forward(T6_FWD_2)
+                .build();
+
+        drive.followTrajectorySequence(t6);
 
         while(!isStopRequested());
     }
