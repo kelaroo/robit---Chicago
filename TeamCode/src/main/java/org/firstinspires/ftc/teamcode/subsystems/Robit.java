@@ -136,7 +136,7 @@ public class Robit {
             public void run() {
 
                 ElapsedTime timer = new ElapsedTime();
-                while(timer.milliseconds() < ELEMENT_IN_WAIT);
+                /*while(timer.milliseconds() < ELEMENT_IN_WAIT);*/
 
                 cuva.setImpinsBlock();
 

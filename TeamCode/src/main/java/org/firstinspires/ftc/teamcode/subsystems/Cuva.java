@@ -20,7 +20,7 @@ public class Cuva {
     public static double IMPINS_BLOCK = 0.42;
     public static double IMPINS_OUT = 0.2;
 
-    public static int RAW_THRESH = 450;
+    public static int RAW_THRESH = 1023;
 
     // Hardware
     Servo impins;
