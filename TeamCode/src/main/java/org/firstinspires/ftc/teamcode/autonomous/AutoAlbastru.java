@@ -25,39 +25,39 @@ public class AutoAlbastru extends LinearOpMode {
     SampleMecanumDrive drive;
     CameraRed camera;
 
-    Pose2d startPose = new Pose2d(7.0, -65.0, rad(-90.0));
+    Pose2d startPose = new Pose2d(7.0, 65.0, rad(90.0));
 
     public static int TIMEOUT = 5000;
     public static int SWITCH_TIME = 250;
-    public static double DRIVE = 0.23, STRAFE = 0, ROTATE = 0.17;
+    public static double DRIVE = 0.23, STRAFE = 0, ROTATE = -0.17;
 
     public static double T1_X_RIGHT = -15;
-    public static double T1_Y_RIGHT = -54;
+    public static double T1_Y_RIGHT = 54;
 
     public static double T1_X_LEFT = -15;
-    public static double T1_Y_LEFT = -47;
+    public static double T1_Y_LEFT = 49;
 
     public static double T1_X = -15;
-    public static double T1_Y = -48;
+    public static double T1_Y = 50;
 
     public static double T2_X = 15;
-    public static double T2_Y = -65;
+    public static double T2_Y = 65;
     public static double T2_FWD = 10;
-    public static double T2_STRAFE = -4;
+    public static double T2_STRAFE = 4;
     public static double T3_FWD = 13.5;
 
     public static double T4_X = 15;
     public static double T5_X = 4.7;
-    public static double T5_Y = -48;
-    public static double T5_ANGLE = -60;
+    public static double T5_Y = 48;
+    public static double T5_ANGLE = 60;
 
     public static double T6_X = 17;
-    public static double T6_Y = -66;
+    public static double T6_Y = 66;
     public static double T7_FWD = 22;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robit = new Robit(hardwareMap, true);
+        robit = new Robit(hardwareMap, false);
         drive = robit.drive;
         robit.initAuto();
 
@@ -132,7 +132,7 @@ public class AutoAlbastru extends LinearOpMode {
         drive.followTrajectorySequence(t2);
 
         Pose2d pose = drive.getPoseEstimate();
-        drive.setPoseEstimate(new Pose2d(pose.getX(), -65, pose.getHeading()));
+        drive.setPoseEstimate(new Pose2d(pose.getX(), 65, pose.getHeading()));
 
         Trajectory t3 = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .forward(T3_FWD)
@@ -155,7 +155,7 @@ public class AutoAlbastru extends LinearOpMode {
                         .back(5.0).build();
                     drive.followTrajectory(pizdaPula);
                     robit.intakeOff();
-                    robit.capper.setBratPosition(Capper.BRAT_MAX);
+                    //robit.capper.setBratPosition(Capper.BRAT_MAX);
                     while(!isStopRequested())
                         ;
                 }
@@ -177,7 +177,7 @@ public class AutoAlbastru extends LinearOpMode {
                     .lineToConstantHeading(new Vector2d(T4_X, pose.getY()))
                     .build();
             Trajectory t5 = drive.trajectoryBuilder(t4.end(), rad(180.0))
-                    .splineToLinearHeading(new Pose2d(T5_X, T5_Y, rad(T5_ANGLE)), rad(90.0))
+                    .splineToLinearHeading(new Pose2d(T5_X, T5_Y, rad(T5_ANGLE)), rad(-90.0))
                     .build();
 
             drive.followTrajectory(t4);
@@ -207,7 +207,7 @@ public class AutoAlbastru extends LinearOpMode {
             drive.followTrajectorySequence(t6);
 
             pose = drive.getPoseEstimate();
-            drive.setPoseEstimate(new Pose2d(pose.getX(), -65, pose.getHeading()));
+            drive.setPoseEstimate(new Pose2d(pose.getX(), 65, pose.getHeading()));
             Trajectory t7 = drive.trajectoryBuilder(drive.getPoseEstimate())
                     .forward(T7_FWD)
                     .build();
@@ -215,7 +215,7 @@ public class AutoAlbastru extends LinearOpMode {
         }
 
         robit.intakeOff();
-        robit.capper.setBratPosition(Capper.BRAT_MAX);
+        robit.capper.setBratPosition(Capper.BRAT_MIN);
 
 
         while(!isStopRequested());
