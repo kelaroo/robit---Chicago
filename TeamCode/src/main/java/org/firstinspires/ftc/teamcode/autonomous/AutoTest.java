@@ -28,7 +28,7 @@ public class AutoTest extends LinearOpMode {
     public static double DRIVE = 0.3, STRAFE = 0, ROTATE = 0.3;
 
     public static double T1_X = -15;
-    public static double T1_Y = -51.5;
+    public static double T1_Y = -48;
     public static double T2_X = 15;
     public static double T2_Y = -65;
     public static double T2_FWD = 10;
@@ -36,16 +36,9 @@ public class AutoTest extends LinearOpMode {
     public static double T3_FWD = 10;
 
     public static double T4_X = 15;
-    public static double T4_Y = -65;
     public static double T5_X = 5.5;
     public static double T5_Y = -54;
-    public static double T5_ANGLE = -55;
-
-    public static double T6_X = 15;
-    public static double T6_Y = -65;
-    public static double T6_FWD = 10;
-    public static double T6_STRAFE = -4;
-    public static double T6_FWD_2 = 10;
+    public static double T5_ANGLE = -58;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -78,9 +71,7 @@ public class AutoTest extends LinearOpMode {
                 })
                 .lineToConstantHeading(new Vector2d(T2_X+T2_FWD, T2_Y+T2_STRAFE))
                 .build();
-        Trajectory t3 = drive.trajectoryBuilder(t2.end())
-                .forward(T3_FWD)
-                .build();
+
 
         robit.capper.setBratPosition(0.4);
         robit.glisiereAuto(Glisiere.GlisierePositions.LEVEL1);
@@ -95,55 +86,72 @@ public class AutoTest extends LinearOpMode {
 
         drive.followTrajectorySequence(t2);
 
+        Pose2d pose = drive.getPoseEstimate();
+        drive.setPoseEstimate(new Pose2d(pose.getX(), -65, pose.getHeading()));
+
+        Trajectory t3 = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .forward(T3_FWD)
+                .build();
+
         drive.followTrajectory(t3);
 
+
         //nebuneala
-        ElapsedTime timer = new ElapsedTime();
-        while(!robit.cuva.isElementIn()) {
-            telemetry.addData("IN_WHILE", "YES");
-            telemetry.update();
-            if((int) timer.milliseconds()/SWITCH_TIME % 2 == 0)
-                drive.powerFromAxis(DRIVE, STRAFE, ROTATE);
-            else drive.powerFromAxis(DRIVE, -STRAFE, -ROTATE);
-            drive.update();
+        for(int i = 0; i < 3; i++) {
+
+            ElapsedTime timer = new ElapsedTime();
+            while(!robit.cuva.isElementIn()) {
+                telemetry.addData("IN_WHILE", "YES");
+                telemetry.update();
+                if((int) timer.milliseconds()/SWITCH_TIME % 2 == 0)
+                    drive.powerFromAxis(DRIVE, STRAFE, ROTATE);
+                else drive.powerFromAxis(DRIVE, -STRAFE, -ROTATE);
+                drive.update();
+            }
+            drive.setMotorPowers(0, 0, 0, 0);
+            if(robit.cuva.isElementIn())
+                robit.autoElementIn();
+
+            pose = drive.getPoseEstimate();
+            Trajectory t4 = drive.trajectoryBuilder(pose)
+                    .lineToConstantHeading(new Vector2d(T4_X, pose.getY()))
+                    .build();
+            Trajectory t5 = drive.trajectoryBuilder(t4.end(), rad(180.0))
+                    .splineToLinearHeading(new Pose2d(T5_X, T5_Y, rad(T5_ANGLE)), rad(90.0))
+                    .build();
+
+            drive.followTrajectory(t4);
+
+            robit.glisiereAuto(Glisiere.GlisierePositions.LEVEL2);
+            robit.cuva.setCuvaSfera();
+
+            drive.followTrajectory(t5);
+
+            robit.cuva.setImpinsOut();
+            sleep(300);
+            robit.glisiereAuto(Glisiere.GlisierePositions.INTAKE);
+
+            pose = drive.getPoseEstimate();
+            TrajectorySequence t6 = drive.trajectorySequenceBuilder(pose)
+                    .splineToLinearHeading(new Pose2d(T2_X, T2_Y, 0.0), 0.0)
+                    .addDisplacementMarker(()->{
+                        robit.cuva.setCuvaIntake();
+                        robit.intakeOn();
+                        robit.intakeDown();
+                        robit.cuva.setImpinsIn();
+                    })
+                    .lineToConstantHeading(new Vector2d(T2_X+T2_FWD, T2_Y+T2_STRAFE))
+                    .build();
+
+            drive.followTrajectorySequence(t6);
+
+            pose = drive.getPoseEstimate();
+            drive.setPoseEstimate(new Pose2d(pose.getX(), -65, pose.getHeading()));
+            Trajectory t7 = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .forward(T3_FWD)
+                    .build();
+            drive.followTrajectory(t7);
         }
-        drive.setMotorPowers(0, 0, 0, 0);
-        if(robit.cuva.isElementIn())
-            robit.autoElementIn();
-
-        Pose2d pose = drive.getPoseEstimate();
-        Trajectory t4 = drive.trajectoryBuilder(pose)
-                .lineToConstantHeading(new Vector2d(T4_X, T4_Y))
-                .build();
-        Trajectory t5 = drive.trajectoryBuilder(t4.end(), rad(180.0))
-                .splineToLinearHeading(new Pose2d(T5_X, T5_Y, rad(T5_ANGLE)), rad(90.0))
-                .build();
-
-        drive.followTrajectory(t4);
-
-        robit.glisiereAuto(Glisiere.GlisierePositions.LEVEL2);
-        robit.cuva.setCuvaSfera();
-
-        drive.followTrajectory(t5);
-
-        robit.cuva.setImpinsOut();
-        sleep(300);
-        robit.glisiereAuto(Glisiere.GlisierePositions.INTAKE);
-
-        TrajectorySequence t6 = drive.trajectorySequenceBuilder(t5.end())
-                .setTangent(rad(-90.0))
-                .splineToLinearHeading(new Pose2d(T6_X, T6_Y, 0.0), 0.0)
-                .addDisplacementMarker(()->{
-                    robit.cuva.setCuvaIntake();
-                    robit.intakeOn();
-                    robit.intakeDown();
-                    robit.cuva.setImpinsIn();
-                })
-                .lineToConstantHeading(new Vector2d(T6_X+T6_FWD, T6_Y+T6_STRAFE))
-                .forward(T6_FWD_2)
-                .build();
-
-        drive.followTrajectorySequence(t6);
 
         while(!isStopRequested());
     }
