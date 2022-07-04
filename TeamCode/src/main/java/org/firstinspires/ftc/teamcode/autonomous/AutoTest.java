@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Glisiere;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Robit;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -25,6 +26,20 @@ public class AutoTest extends LinearOpMode {
     public static int TIMEOUT = 1000;
     public static int SWITCH_TIME = 150;
     public static double DRIVE = 0.3, STRAFE = 0, ROTATE = 0.3;
+
+    public static double T1_X = -15;
+    public static double T1_Y = -51.5;
+    public static double T2_X = 15;
+    public static double T2_Y = -65;
+    public static double T2_FWD = 10;
+    public static double T2_STRAFE = -4;
+    public static double T3_FWD = 10;
+
+    public static double T4_X = 15;
+    public static double T4_Y = -65;
+    public static double T5_X = 5.5;
+    public static double T5_Y = -54;
+    public static double T5_ANGLE = -55;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,20 +60,20 @@ public class AutoTest extends LinearOpMode {
         updateThread.start();
 
         Trajectory t1 = drive.trajectoryBuilder(startPose)
-                .lineToConstantHeading(new Vector2d(-10, -55))
+                .lineToConstantHeading(new Vector2d(T1_X, T1_Y))
                 .build();
         TrajectorySequence t2 = drive.trajectorySequenceBuilder(t1.end())
-                .splineToLinearHeading(new Pose2d(15, -65, 0.0), 0.0)
+                .splineToLinearHeading(new Pose2d(T2_X, T2_Y, 0.0), 0.0)
                 .addDisplacementMarker(()->{
                     robit.cuva.setCuvaIntake();
                     robit.intakeOn();
                     robit.intakeDown();
                     robit.cuva.setImpinsIn();
                 })
-                .strafeRight(4.0)
+                .lineToConstantHeading(new Vector2d(T2_X+T2_FWD, T2_Y+T2_STRAFE))
                 .build();
         Trajectory t3 = drive.trajectoryBuilder(t2.end())
-                .forward(25.0)
+                .forward(T3_FWD)
                 .build();
 
         robit.capper.setBratPosition(0.4);
@@ -86,18 +101,28 @@ public class AutoTest extends LinearOpMode {
             else drive.powerFromAxis(DRIVE, -STRAFE, -ROTATE);
             drive.update();
         }
-
         drive.setMotorPowers(0, 0, 0, 0);
-
         if(robit.cuva.isElementIn())
             robit.autoElementIn();
 
         Pose2d pose = drive.getPoseEstimate();
-        TrajectorySequence t4 = drive.trajectorySequenceBuilder(t3.end())
-                .lineToConstantHeading(new Vector2d(pose.getX()-5, pose.getY()-4))
-                .back(20.0)
+        Trajectory t4 = drive.trajectoryBuilder(pose)
+                .lineToConstantHeading(new Vector2d(T4_X, T4_Y))
                 .build();
-        drive.followTrajectorySequence(t4);
+        Trajectory t5 = drive.trajectoryBuilder(t4.end(), rad(180.0))
+                .splineToLinearHeading(new Pose2d(T5_X, T5_Y, rad(T5_ANGLE)), rad(90.0))
+                .build();
+
+        drive.followTrajectory(t4);
+
+        robit.glisiereAuto(Glisiere.GlisierePositions.LEVEL2);
+        robit.cuva.setCuvaSfera();
+
+        drive.followTrajectory(t5);
+
+        robit.cuva.setImpinsOut();
+        sleep(300);
+        robit.glisiereAuto(Glisiere.GlisierePositions.INTAKE);
 
         while(!isStopRequested());
     }
