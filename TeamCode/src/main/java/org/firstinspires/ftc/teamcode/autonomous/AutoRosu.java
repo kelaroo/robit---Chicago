@@ -22,7 +22,7 @@ import java.sql.Time;
 
 @Config
 @Autonomous
-public class AutoTest extends LinearOpMode {
+public class AutoRosu extends LinearOpMode {
 
     Robit robit;
     SampleMecanumDrive drive;

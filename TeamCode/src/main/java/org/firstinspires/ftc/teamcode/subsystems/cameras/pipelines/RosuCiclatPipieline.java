@@ -9,12 +9,12 @@ import org.opencv.imgproc.Imgproc;
 
 public class RosuCiclatPipieline extends DetectionPipeline{
 
-    public static int H_MIN = 95;
-    public static int S_MIN = 110;
-    public static int V_MIN = 125;
+    public static int H_MIN = 55;
+    public static int S_MIN = 120;
+    public static int V_MIN = 155;
     public static int H_MAX = 105;
-    public static int S_MAX = 250;
-    public static int V_MAX = 180;
+    public static int S_MAX = 255;
+    public static int V_MAX = 255;
 
     public static int SEPARATION_LINE = 180;
 
