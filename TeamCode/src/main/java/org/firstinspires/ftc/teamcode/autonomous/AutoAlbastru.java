@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Capper;
 import org.firstinspires.ftc.teamcode.subsystems.Glisiere;
 import org.firstinspires.ftc.teamcode.subsystems.Robit;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.CameraRed;
+import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.AlbastruCiclatPipieline;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.DetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.RosuCiclatPipieline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -61,7 +62,7 @@ public class AutoAlbastru extends LinearOpMode {
         drive = robit.drive;
         robit.initAuto();
 
-        camera = new CameraRed(hardwareMap, new RosuCiclatPipieline());
+        camera = new CameraRed(hardwareMap, new AlbastruCiclatPipieline());
 
         DetectionPipeline.TsePosition tsePosition = DetectionPipeline.TsePosition.RIGHT;
         while(!isStarted()) {

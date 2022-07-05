@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Robit;
 import org.firstinspires.ftc.teamcode.util.GamepadEx;
 
 @TeleOp
-public class RobitOp extends OpMode {
+public class RobitOpRed extends OpMode {
 
     GamepadEx g1, g2;
 
@@ -28,7 +28,7 @@ public class RobitOp extends OpMode {
         robit.intakeDown();
         robit.update();
 
-        robit.glisiere.resetEncoders();
+        //robit.glisiere.resetEncoders();
 
         g1 = new GamepadEx(gamepad1);
         g2 = new GamepadEx(gamepad2);

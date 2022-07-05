@@ -34,6 +34,8 @@ public class ConfigOp extends OpMode {
         rate = new Rate(hardwareMap);
         drive = new SampleMecanumDrive(hardwareMap);
 
+        glisiere.resetEncoders();
+
         g1 = new GamepadEx(gamepad1);
         g2 = new GamepadEx(gamepad2);
 

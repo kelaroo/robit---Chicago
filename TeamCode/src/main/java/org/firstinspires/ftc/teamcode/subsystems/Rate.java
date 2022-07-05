@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Rate {
 
     // Constants
-    public static double POWER = 0.25;
+    public static double POWER = 0.22;
 
     // Hardware
     public DcMotorEx rate;
