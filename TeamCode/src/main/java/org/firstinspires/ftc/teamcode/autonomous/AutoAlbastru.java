@@ -124,7 +124,7 @@ public class AutoAlbastru extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(T2_X, T2_Y, 0.0), 0.0)
                 .addDisplacementMarker(()->{
                     robit.cuva.setCuvaIntake();
-                    robit.intakeOn();
+                    robit.intakeAuto();
                     robit.intakeDown();
                     robit.cuva.setImpinsIn();
                 })
@@ -198,7 +198,7 @@ public class AutoAlbastru extends LinearOpMode {
                     .splineToLinearHeading(new Pose2d(T6_X, T6_Y, 0.0), 0.0)
                     .addDisplacementMarker(()->{
                         robit.cuva.setCuvaIntake();
-                        robit.intakeOn();
+                        robit.intakeAuto();
                         robit.intakeDown();
                         robit.cuva.setImpinsIn();
                     })

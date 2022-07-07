@@ -57,6 +57,8 @@ public class Robit {
         }
     }
 
+    public void intakeAuto() { intake.intakeAuto(); }
+
     public void intakeOff() {
         intake.intakeOff();
     }
