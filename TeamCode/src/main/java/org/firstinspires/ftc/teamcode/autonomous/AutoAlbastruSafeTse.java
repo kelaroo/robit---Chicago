@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Capper;
 import org.firstinspires.ftc.teamcode.subsystems.Glisiere;
 import org.firstinspires.ftc.teamcode.subsystems.Robit;
 import org.firstinspires.ftc.teamcode.subsystems.cameras.CameraRed;
@@ -15,13 +16,13 @@ import org.firstinspires.ftc.teamcode.subsystems.cameras.pipelines.DetectionPipe
 
 @Config
 @Autonomous
-public class AutoAlbastruSafe extends LinearOpMode {
+public class AutoAlbastruSafeTse extends LinearOpMode {
 
     Robit robit;
     SampleMecanumDrive drive;
     CameraRed camera;
 
-    Pose2d startPose = new Pose2d(-43.0, 65.0, rad(-90.0));
+    Pose2d startPose = new Pose2d(-43.0, -65.0, rad(-90.0));
 
     public static double T1_X_LEFT = -23;
     public static double T1_Y_LEFT = 48;
@@ -35,8 +36,20 @@ public class AutoAlbastruSafe extends LinearOpMode {
     public static double T1_Y_RIGHT = 48;
     public static double T1_ANGLE_RIGHT = 120;
 
-    public static double T2_X = 0.0;
-    public static double T2_Y = 50.0;
+    public static double T2_X_MID = -38.0;
+    public static double T2_Y_MID = 55.0;
+    public static double T3_MID = 10.0;
+
+    public static double T2_X_LEFT = -38.0;
+    public static double T2_Y_LEFT = 55.0;
+    public static double T3_LEFT = 10.0;
+
+    public static double T2_X_RIGHT = -38.0;
+    public static double T2_Y_RIGHT = 55.0;
+    public static double T3_RIGHT = 10.0;
+
+    public static double T4_X = 0.0;
+    public static double T4_Y = 50.0;
 
     public static double PARK_POWER = -0.8;
     public static int PARK_SLEEP = 2000;
@@ -104,11 +117,50 @@ public class AutoAlbastruSafe extends LinearOpMode {
         robit.glisiereAuto(Glisiere.GlisierePositions.INTAKE);
         robit.glisiere.update();
 
-        Trajectory t2 = drive.trajectoryBuilder(t1.end())
-                .lineToLinearHeading(new Pose2d(T2_X, T2_Y, rad(180.0)))
+        Trajectory t2;
+        Trajectory t3;
+        switch (tsePosition) {
+            case MID:
+                t2 = drive.myTrajectoryBuilder(t1.end(), 40, 40)
+                        .lineToLinearHeading(new Pose2d(T2_X_MID, T2_Y_MID, 180.0))
+                        .build();
+                t3 = drive.myTrajectoryBuilder(t2.end(), 40, 40)
+                        .strafeLeft(T3_MID)
+                        .build();
+                break;
+            case LEFT:
+                t2 = drive.myTrajectoryBuilder(t1.end(), 40, 40)
+                        .lineToLinearHeading(new Pose2d(T2_X_LEFT, T2_Y_LEFT, 180.0))
+                        .build();
+                t3 = drive.myTrajectoryBuilder(t2.end(), 40, 40)
+                        .strafeLeft(T3_LEFT)
+                        .build();
+                break;
+            case RIGHT:
+            default:
+                t2 = drive.myTrajectoryBuilder(t1.end(), 40, 40)
+                        .lineToLinearHeading(new Pose2d(T2_X_RIGHT, T2_Y_RIGHT, 180.0))
+                        .build();
+                t3 = drive.myTrajectoryBuilder(t2.end(), 40, 40)
+                        .strafeLeft(T3_RIGHT)
+                        .build();
+                break;
+        }
+
+        robit.capper.setBratPosition(Capper.BRAT_MAX);
+        robit.capper.clawDrop();
+        drive.followTrajectory(t2);
+
+        drive.followTrajectory(t3);
+        robit.capper.clawGrab();
+        sleep(550);
+        robit.capper.setBratPosition(0.4);
+
+        Trajectory t4 = drive.trajectoryBuilder(t3.end())
+                .lineToLinearHeading(new Pose2d(T4_X, T4_Y, rad(180.0)))
                 .build();
 
-        drive.followTrajectory(t2);
+        drive.followTrajectory(t4);
 
         drive.setMotorPowers(PARK_POWER, PARK_POWER, PARK_POWER, PARK_POWER);
         sleep(PARK_SLEEP);

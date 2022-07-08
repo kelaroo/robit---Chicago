@@ -38,7 +38,9 @@ public class AutoRosuSafe extends LinearOpMode {
 
     public static double T2_X = 0.0;
     public static double T2_Y = -50.0;
-    public static double PARK_POWER = 0.8;
+
+    public static double PARK_POWER = -0.8;
+    public static int PARK_SLEEP = 2000;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -110,6 +112,8 @@ public class AutoRosuSafe extends LinearOpMode {
         drive.followTrajectory(t2);
 
         drive.setMotorPowers(PARK_POWER, PARK_POWER, PARK_POWER, PARK_POWER);
+        sleep(PARK_SLEEP);
+        drive.setMotorPowers(0, 0, 0, 0);
 
         while(!isStopRequested());
     }
